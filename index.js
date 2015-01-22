@@ -1,6 +1,9 @@
 'use strict';
 
-var xhr = require('xhr');
+//
+// Plugin name.
+//
+exports.name = 'async';
 
 /**
  * The client-side plugin for BigPipe which adds XHR functionality.
@@ -10,21 +13,34 @@ var xhr = require('xhr');
  * @api public
  */
 exports.client = function client(pipe, options) {
-  var async = pipe.xhr = {};
+  var xhr = require('xhr')
+    , async = pipe.xhr = {};
 
-  async.post = function post(uri, data, done) {
-    xhr({
-      method: 'post',
-      body: data,
-      uri: uri
-    }, done)
+  /**
+   * GET request via xhr.
+   *
+   * @param {String} uri Target url.
+   * @param {Function} done Completion callback.
+   * @api public
+   */
+  async.get = function get(uri, done) {
+    xhr({ method: 'get', uri: uri }, done);
   };
 
-  async.get = function get(uri, data, done) {
-    xhr({
-      method: 'get',
-      body: 'string' === typeof data ? data : JSON.stringify(data),
-      uri: uri
-    }, done)
+  /**
+   * POST request via xhr.
+   *
+   * @param {String} uri Target url.
+   * @param {Object} data Optional data.
+   * @param {Function} done Completion callback.
+   * @api public
+   */
+  async.post = function post(uri, data, done) {
+    if ('function' !== typeof done) {
+      done = data;
+      data = {};
+    }
+
+    xhr({ method: 'post', body: data, uri: uri }, done);
   };
 };
