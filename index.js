@@ -41,6 +41,12 @@ exports.client = function client(pipe, options) {
       data = {};
     }
 
-    xhr({ method: 'post', body: data, uri: uri }, done);
+    var object = {
+      method: 'post',
+      uri: uri
+    };
+
+    object['string' === typeof data ? 'body' : 'json'] = data;
+    xhr(object, done);
   };
 };
