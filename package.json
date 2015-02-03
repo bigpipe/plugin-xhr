@@ -1,7 +1,7 @@
 {
-  "name": "bigpipe-async",
+  "name": "bigpipe-xhr",
   "version": "1.0.0",
-  "description": "Client side plugin to enable xhr",
+  "description": "Client side BigPipe plugin to enable xhr",
   "main": "index.js",
   "scripts": {
     "test": "mocha $(find test -name '*.test.js')",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bigpipe/plugin-async.git"
+    "url": "https://github.com/bigpipe/plugin-xhr.git"
   },
   "author": "Martijn Swaagman",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bigpipe/plugin-async/issues"
+    "url": "https://github.com/bigpipe/plugin-xhr/issues"
   },
-  "homepage": "https://github.com/bigpipe/plugin-async",
+  "homepage": "https://github.com/bigpipe/plugin-xhr",
   "dependencies": {
     "xhr": "2.0.x"
   }
