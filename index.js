@@ -3,7 +3,7 @@
 //
 // Plugin name.
 //
-exports.name = 'async';
+exports.name = 'xhr';
 
 /**
  * The server-side plugin for BigPipe which adds a proxy function.
