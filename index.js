@@ -154,7 +154,7 @@ exports.client = function client(pipe, options) {
           if (error) return done(error);
 
           pipe.once(pagelet.name +':render', function rendered(html) {
-            done(null, response, html);
+            done(null, response, body);
           });
 
           pagelet.render(body);

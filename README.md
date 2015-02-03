@@ -50,7 +50,7 @@ if you want to prevent client side rendering, use [pagelet.end][end] otherwise.
 
 ```js
 require('pagelet').extend({
-  post: function post() {
+  post: function post(fields, files) {
     this.plain({
       name: 'some title',
       desc: 'custom description'
@@ -68,16 +68,16 @@ response returned an error or if the `statusCode >= 400`.
 If the written content is a `string` the pagelet content will be replaced
 with the `body`. If the written content is JSON of type `object` the
 client-side template is re-rendered with that data.
-**Rendering is only done if the `response.header.plain` is not `true`**
+*Rendering is only done if `response.headers.plain` is not `true`*.
 
 #### Pagelet.xhr.get()
 
 Execute a GET request to the provided `uri`. The content written to the response
-will be used for rendering, see the [introduction][#client-api].
+will be used for rendering, see the [introduction].
 
 ```js
 pipe.on('search:render', function render(pagelet) {
-  document.getElementById('status').addEventListener('click', function clicked() {
+  document.getElementById('status').addEventListener('click', function get() {
     pagelet.xhr.get(
       '/status/102383',                           // uri
       function (error, response, body)            // callback
@@ -89,8 +89,8 @@ pipe.on('search:render', function render(pagelet) {
 #### Pagelet.xhr.post()
 
 Execute a POST request to the provided `uri` with optional JSON data. The
-content written to the response will be used for rendering, see
-the [introduction][#client-api].
+content written to the response will be used for rendering, see the
+[introduction].
 
 ```js
 pipe.on('search:render', function render(pagelet) {
@@ -107,8 +107,8 @@ pipe.on('search:render', function render(pagelet) {
 #### Pagelet.xhr.put()
 
 Execute a PUT request to the provided `uri` with optional JSON data. The
-content written to the response will be used for rendering, see
-the [introduction][#client-api].
+content written to the response will be used for rendering, see the
+[introduction].
 
 ```js
 pipe.on('search:render', function render(pagelet) {
@@ -125,7 +125,7 @@ pipe.on('search:render', function render(pagelet) {
 #### Pagelet.xhr.delete()
 
 Execute a DELETE request to the provided `uri`. The content written to the response
-will be used for rendering, see the [introduction][#client-api].
+will be used for rendering, see the [introduction].
 
 ```js
 pipe.on('search:render', function render(pagelet) {
@@ -151,3 +151,4 @@ Bigpipe-xhr is released under MIT.
 
 [Bigpipe]: http://bigpipe.io
 [end]: http://bigpipe.io/#pageletend
+[introduction]: #client-api
