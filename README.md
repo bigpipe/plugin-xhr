@@ -68,7 +68,7 @@ response returned an error or if the `statusCode >= 400`.
 If the written content is a `string` the pagelet content will be replaced
 with the `body`. If the written content is JSON of type `object` the
 client-side template is re-rendered with that data.
-*Rendering is only done if `response.headers.plain` is not `true`*.
+**Rendering is only done if `response.headers.plain` is not `true`**.
 
 #### Pagelet.xhr.get()
 
@@ -114,8 +114,8 @@ content written to the response will be used for rendering, see the
 pipe.on('search:render', function render(pagelet) {
   document.getElementById('update').addEventListener('click', function update() {
     pagelet.xhr.put(
-      '/search',                                  // uri
-      { query: 'input in form' },                 // JSON data
+      '/user/update',                             // uri
+      { username: 'peter' },                      // JSON data
       function (error, response, body)            // callback
     });
   });
