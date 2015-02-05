@@ -111,7 +111,7 @@ exports.client = function client(pipe, options) {
      * @param {Function} done Completion callback.
      * @api public
      */
-    async.get = function get(uri, done) {
+    async.delete = function get(uri, done) {
       xhr({ method: 'delete', uri: uri }, process(done));
     };
 
