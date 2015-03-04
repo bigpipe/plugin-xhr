@@ -130,7 +130,6 @@ describe('BigPipe Plugin XHR', function () {
     });
 
     Pagelet = Pagelet.extend({
-      load: function (template, cb) { cb() },
       render: function (body) { this._pipe.emit(this.name +':render') }
     });
 
@@ -198,34 +197,6 @@ describe('BigPipe Plugin XHR', function () {
         local.xhr.get('/test', function test(error, response, body) {
           assume(error).to.be.instanceof(Error);
           assume(error.message).to.equal('Status: 500');
-          assume(response).to.equal(undefined);
-          assume(body).to.equal(undefined);
-          done();
-        });
-      });
-
-      it('returns template loader error if any', function (done) {
-        var Test = Pagelet.extend({
-              load: function (template, cb) {
-                cb(new Error('Loading template failed'));
-              }
-            })
-          , test = new Test({ pipe: pipe });
-
-        stub.exports = function (options, next) {
-          assume(options).to.be.an('object');
-          assume(options).to.have.property('method', 'get');
-          assume(options).to.have.property('uri', '/test');
-          assume(next).to.be.a('function');
-          next(null, { statusCode: 200 }, 'test');
-        };
-
-        xhr.client(pipe);
-        pipe.emit('create', test);
-
-        test.xhr.get('/test', function test(error, response, body) {
-          assume(error).to.be.instanceof(Error);
-          assume(error.message).to.equal('Loading template failed');
           assume(response).to.equal(undefined);
           assume(body).to.equal(undefined);
           done();

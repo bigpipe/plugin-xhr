@@ -150,15 +150,11 @@ exports.client = function client(pipe, options) {
         //
         // Process the returned data and render the Pagelet.
         //
-        pagelet.load('client', function templated(error) {
-          if (error) return done(error);
-
-          pipe.once(pagelet.name +':render', function rendered(html) {
-            done(null, response, body);
-          });
-
-          pagelet.render(body);
+        pipe.once(pagelet.name +':render', function rendered(html) {
+          done(null, response, body);
         });
+
+        pagelet.render(body);
       };
     }
   });
