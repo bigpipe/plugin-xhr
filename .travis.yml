@@ -1,9 +1,32 @@
 language: node_js
 node_js:
-  - "0.8"
+  - "0.12"
   - "0.10"
-  - "0.11"
+  - "0.8"
+  - "iojs"
+env:
+  global:
+    - "MASTER=false"
+before_install:
+  - "npm install -g npm@2.1.18"
+  - "npm config set loglevel error"
+before_script:
+  - "[ $MASTER == false ] || sh ./symlink.sh"
 script:
   - "npm run test-travis"
 after_script:
   - "npm install coveralls@2.11.x && cat coverage/lcov.info | coveralls"
+matrix:
+  fast_finish: true
+  allow_failures:
+    - node_js: "iojs"
+    - env: "MASTER=true"
+  include:
+    - node_js: "0.10"
+    - env: "MASTER=true"
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#bigpipe"
+    on_success: change
+    on_failure: change
