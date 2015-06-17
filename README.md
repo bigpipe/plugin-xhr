@@ -1,8 +1,8 @@
 # BigPipe - Plugin XHR
 
-[![Version npm][version]](http://browsenpm.org/package/plugin-xhr)[![Build Status][build]](https://travis-ci.org/bigpipe/plugin-xhr)[![Dependencies][david]](https://david-dm.org/bigpipe/plugin-xhr)[![Coverage Status][cover]](https://coveralls.io/r/bigpipe/plugin-xhr?branch=master)
+[![Version npm][version]](http://browsenpm.org/package/bigpipe-xhr)[![Build Status][build]](https://travis-ci.org/bigpipe/plugin-xhr)[![Dependencies][david]](https://david-dm.org/bigpipe/plugin-xhr)[![Coverage Status][cover]](https://coveralls.io/r/bigpipe/plugin-xhr?branch=master)
 
-[version]: http://img.shields.io/npm/v/plugin-xhr.svg?style=flat-square
+[version]: http://img.shields.io/npm/v/bigpipe-xhr.svg?style=flat-square
 [build]: http://img.shields.io/travis/bigpipe/plugin-xhr/master.svg?style=flat-square
 [david]: https://img.shields.io/david/bigpipe/plugin-xhr.svg?style=flat-square
 [cover]: http://img.shields.io/coveralls/bigpipe/plugin-xhr/master.svg?style=flat-square
