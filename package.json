@@ -26,7 +26,7 @@
     "assume": "1.1.x",
     "istanbul": "0.3.x",
     "mocha": "2.2.x",
-    "pagelet": "1.0.x",
+    "pagelet": "0.9.x",
     "pre-commit": "1.0.x"
   }
 }
