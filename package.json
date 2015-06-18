@@ -20,13 +20,13 @@
   },
   "homepage": "https://github.com/bigpipe/plugin-xhr",
   "dependencies": {
-    "xhr": "2.0.x"
+    "xhr": "~2.0.0"
   },
   "devDependencies": {
-    "assume": "1.1.x",
-    "istanbul": "0.3.x",
-    "mocha": "2.2.x",
-    "pagelet": "0.9.x",
-    "pre-commit": "1.0.x"
+    "assume": "~1.2.5",
+    "istanbul": "~0.3.0",
+    "mocha": "~2.2.0",
+    "pagelet": "~0.9.0",
+    "pre-commit": "~1.0.0"
   }
 }
