@@ -4,7 +4,7 @@ var assume = require('assume')
   , EventEmitter = require('events').EventEmitter
   , Pagelet = require('pagelet')
   , xhr = require('./')
-  , Local, pipe;
+  , Local, bigpipe;
 
 function noop() {}
 
@@ -28,26 +28,26 @@ describe('BigPipe Plugin XHR', function () {
 
   describe('server side plugin', function () {
     beforeEach(function () {
-      pipe = new EventEmitter;
+      bigpipe = new EventEmitter;
       Local = Pagelet.extend();
     });
 
     afterEach(function () {
-      pipe = Local = null;
+      bigpipe = Local = null;
     });
 
     it('waits for transform:pagelet:after event', function (done) {
-      xhr.server(pipe);
+      xhr.server(bigpipe);
 
-      assume(pipe._events).to.have.property('transform:pagelet:after');
-      pipe.emit('transform:pagelet:after', Local, done);
+      assume(bigpipe._events).to.have.property('transform:pagelet:after');
+      bigpipe.emit('transform:pagelet:after', Local, done);
     });
 
     it('adds proxy method plain to the Pagelet prototype', function (done) {
-      xhr.server(pipe);
+      xhr.server(bigpipe);
 
       assume(Local.prototype).to.not.have.property('plain');
-      pipe.emit('transform:pagelet:after', Local, function (error, Transformed) {
+      bigpipe.emit('transform:pagelet:after', Local, function (error, Transformed) {
         assume(error).to.equal(null);
         assume(Transformed.prototype.plain).to.be.a('function');
 
@@ -56,10 +56,10 @@ describe('BigPipe Plugin XHR', function () {
     });
 
     it('will not override earlier defined plain property', function (done) {
-      xhr.server(pipe);
+      xhr.server(bigpipe);
 
       var Has = Local.extend({ plain: 'test' })
-      pipe.emit('transform:pagelet:after', Has, function (error, Transformed) {
+      bigpipe.emit('transform:pagelet:after', Has, function (error, Transformed) {
         assume(error).to.equal(null);
         assume(Transformed.prototype.plain).to.equal('test');
 
@@ -68,16 +68,16 @@ describe('BigPipe Plugin XHR', function () {
     });
 
     it('#plain wil set header plain to true', function (done) {
-      xhr.server(pipe);
+      xhr.server(bigpipe);
 
-      pipe.emit('transform:pagelet:after', Local, function (error, Transformed) {
+      bigpipe.emit('transform:pagelet:after', Local, function (error, Transformed) {
         var header;
 
         assume(error).to.equal(null);
         assume(Transformed.prototype.plain).to.be.a('function');
 
         header = new Transformed;
-        header.bootstrap = { flush: noop };
+        header.bootstrap = { name: 'bootstrap', flush: noop };
         header._res = {
           setHeader: function setHeader(header, value) {
             assume(header).to.equal('plain');
@@ -91,15 +91,16 @@ describe('BigPipe Plugin XHR', function () {
     });
 
     it('#plain will call end with data', function (done) {
-      xhr.server(pipe);
+      xhr.server(bigpipe);
 
-      pipe.emit('transform:pagelet:after', Local, function (error, Transformed) {
+      bigpipe.emit('transform:pagelet:after', Local, function (error, Transformed) {
         var end;
 
         end = new Transformed;
         end._res = { setHeader: noop };
         end.bootstrap = {
           flush: noop,
+          name: 'bootstrap',
           queue: function (name, parent, data) {
             assume(data).to.equal('test');
             done();
@@ -130,23 +131,23 @@ describe('BigPipe Plugin XHR', function () {
     });
 
     Pagelet = Pagelet.extend({
-      render: function (body) { this._pipe.emit(this.name +':render') }
+      render: function (body) { this._bigpipe.emit(this.name +':render') }
     });
 
     beforeEach(function () {
-      pipe = new EventEmitter;
-      local = new Pagelet({ pipe: pipe });
+      bigpipe = new EventEmitter;
+      local = new Pagelet({ bigpipe: bigpipe });
     });
 
     afterEach(function () {
-      pipe = local = null;
+      bigpipe = local = null;
     });
 
     it('waits for create event', function () {
-      xhr.client(pipe);
-      pipe.emit('create', local);
+      xhr.client(bigpipe);
+      bigpipe.emit('create', local);
 
-      assume(pipe._events).to.have.property('create');
+      assume(bigpipe._events).to.have.property('create');
       assume(local.xhr).to.have.property('get');
       assume(local.xhr).to.have.property('post');
       assume(local.xhr).to.have.property('delete');
@@ -155,8 +156,8 @@ describe('BigPipe Plugin XHR', function () {
 
     describe('#get', function () {
       it('is a function', function () {
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         assume(local.xhr.get).to.be.a('function');
         assume(local.xhr.get.length).to.equal(2);
@@ -171,8 +172,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.get('/test', function test(error, response, body) {
           assume(error).to.equal(null);
@@ -191,8 +192,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, {}, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.get('/test', function test(error, response, body) {
           assume(error).to.be.instanceof(Error);
@@ -205,7 +206,7 @@ describe('BigPipe Plugin XHR', function () {
 
       it('returns early if headers.plain equals true', function (done) {
         var Test = Pagelet.extend({ load: noop })
-          , test = new Test({ pipe: pipe });
+          , test = new Test({ bigpipe: bigpipe });
 
         stub.exports = function (options, next) {
           assume(options).to.be.an('object');
@@ -215,8 +216,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200, headers: { plain: 'true' }}, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', test);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', test);
 
         test.xhr.get('/test', function test(error, response, body) {
           assume(error).to.equal(null)  ;
@@ -229,8 +230,8 @@ describe('BigPipe Plugin XHR', function () {
 
     describe('#delete', function () {
       it('is a function', function () {
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         assume(local.xhr.delete).to.be.a('function');
         assume(local.xhr.delete.length).to.equal(2);
@@ -245,8 +246,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.delete('/test', function test(error, response, body) {
           assume(error).to.equal(null);
@@ -259,8 +260,8 @@ describe('BigPipe Plugin XHR', function () {
 
     describe('#post', function () {
       it('is a function', function () {
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         assume(local.xhr.post).to.be.a('function');
         assume(local.xhr.post.length).to.equal(3);
@@ -277,8 +278,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.post('/test', { data: 'query' }, function test(error, response, body) {
           assume(error).to.equal(null);
@@ -299,8 +300,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.post('/test', function test(error, response, body) {
           assume(error).to.equal(null);
@@ -320,8 +321,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.post('/test', 'search', function test(error, response, body) {
           assume(error).to.equal(null);
@@ -334,8 +335,8 @@ describe('BigPipe Plugin XHR', function () {
 
     describe('#put', function () {
       it('is a function', function () {
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         assume(local.xhr.put).to.be.a('function');
         assume(local.xhr.put.length).to.equal(3);
@@ -352,8 +353,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.put('/test', { data: 'query' }, function test(error, response, body) {
           assume(error).to.equal(null);
@@ -374,8 +375,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.put('/test', function test(error, response, body) {
           assume(error).to.equal(null);
@@ -395,8 +396,8 @@ describe('BigPipe Plugin XHR', function () {
           next(null, { statusCode: 200 }, 'test');
         };
 
-        xhr.client(pipe);
-        pipe.emit('create', local);
+        xhr.client(bigpipe);
+        bigpipe.emit('create', local);
 
         local.xhr.put('/test', 'search', function test(error, response, body) {
           assume(error).to.equal(null);
