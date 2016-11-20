@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/bigpipe/plugin-xhr",
   "dependencies": {
-    "xhr": "~2.2.2"
+    "xhr": "~2.3.0"
   },
   "devDependencies": {
     "assume": "~1.4.1",
