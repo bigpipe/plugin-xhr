@@ -23,7 +23,7 @@
     "xhr": "~2.2.2"
   },
   "devDependencies": {
-    "assume": "~1.4.1",
+    "assume": "~1.5.0",
     "istanbul": "~0.4.5",
     "mocha": "~3.1.2",
     "pagelet": "~0.9.0",
